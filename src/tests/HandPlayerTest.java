@@ -2,7 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package poker;
+package tests;
+
+import models.Player;
+import models.Card;
 
 /**
  *
@@ -10,7 +13,7 @@ package poker;
  */
 public class HandPlayerTest {
     public static void main(String[] args){
-        Player p1 = new Player(0);
+        Player p1 = new Player(0, "John Doe");
         Card[] c = {new Card(1, "♣"), new Card(1, "❤"), new Card(1, "♦"), 
             new Card(1, "♠"), new Card(3, "♣")};
         p1.takeCard(c);

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package poker;
+package models;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -15,7 +15,7 @@ import java.util.Collections;
  */
 public class Hand {
 
-    private ArrayList hand;
+    private ArrayList<Card> hand;
     private int score;
     private String handValue;
 
@@ -31,8 +31,6 @@ public class Hand {
 
     public Card[] discard() {
         ArrayList<Card> discartedCards = new ArrayList<>();
-        Card[] discartedCardsArray;
-        this.sortHand();
         this.handValue = this.checkHand();
         int lastCard;
         switch (this.handValue) {
@@ -59,35 +57,29 @@ public class Hand {
                 break;
         }
         for (int i = 4; i > lastCard; i--) {
-            Card x = (Card) this.hand.remove(i);
-            discartedCards.add(x);
+            discartedCards.add(this.hand.remove(i));
         }
-        discartedCardsArray = new Card[discartedCards.size()];
-        discartedCards.toArray(discartedCardsArray);
-        return discartedCardsArray;
+        return discartedCards.toArray(new Card[discartedCards.size()]);
     }
 
     private void sortHand() {
-        Card[] handArray;
         Collections.sort(this.hand, new Comparator<Card>() {
             @Override
             public int compare(Card c1, Card c2) {
                 return c2.getNumber() - c1.getNumber();
             }
         });
-        handArray = new Card[this.hand.size()];
         for (int i = 0; i < this.hand.size(); i++) {
-            this.hand.toArray(handArray);
-            if (handArray[0].getNumber() == handArray[1].getNumber()) {
+            if (this.hand.get(0).getNumber() == this.hand.get(1).getNumber()) {
                 //It's a pair
-                if (handArray[0].getNumber() != handArray[2].getNumber()) {
+                if (this.hand.get(0).getNumber() != this.hand.get(2).getNumber()) {
                     //It's not three of a kind.
-                    if (handArray[2].getNumber() == handArray[3].getNumber()
-                            && handArray[2].getNumber() == handArray[4].getNumber()) {
+                    if (this.hand.get(2).getNumber() == this.hand.get(3).getNumber()
+                            && this.hand.get(2).getNumber() == this.hand.get(4).getNumber()) {
                         //It's an inverted full house.
                         Collections.reverse(this.hand);
-                    } else if(handArray[2].getNumber() != handArray[1].getNumber() &&
-                            handArray[2].getNumber() != handArray[3].getNumber()){
+                    } else if(this.hand.get(2).getNumber() != this.hand.get(1).getNumber() &&
+                            this.hand.get(2).getNumber() != this.hand.get(3).getNumber()){
                         //The middle card may be placed between two pairs.
                         this.hand.add(this.hand.remove(2));
                     }
@@ -110,21 +102,19 @@ public class Hand {
     }
 
     private String checkHand() {
-        Card[] handArray = new Card[this.hand.size()];
-        this.hand.toArray(handArray);
-        if (handArray[0].getNumber() == handArray[1].getNumber()) {
-            if (handArray[0].getNumber() == handArray[2].getNumber()) {
-                if (handArray[0].getNumber() == handArray[3].getNumber()) {
+        if (this.hand.get(0).getNumber() == this.hand.get(1).getNumber()) {
+            if (this.hand.get(0).getNumber() == this.hand.get(2).getNumber()) {
+                if (this.hand.get(0).getNumber() == this.hand.get(3).getNumber()) {
                     //Player has four of a kind.
                     return "Four of a kind";
-                } else if (handArray[3].getNumber() == handArray[4].getNumber()) {
+                } else if (this.hand.get(3).getNumber() == this.hand.get(4).getNumber()) {
                     //Player has a full house.
                     return "Full house";
                 } else {
                     //Player has three of a kind.
                     return "Three of a kind";
                 }
-            } else if (handArray[2].getNumber() == handArray[3].getNumber()) {
+            } else if (this.hand.get(2).getNumber() == this.hand.get(3).getNumber()) {
                 //Player has two pairs.
                 return "Two pairs";
             } else {
@@ -144,40 +134,41 @@ public class Hand {
         this.handValue = "";
     }
     public void setScore() {
-        Card[] handArray = new Card[this.hand.size()];
         this.sortHand();
-        this.hand.toArray(handArray);
         this.handValue = this.checkHand();
         switch (this.handValue) {
             case "Four of a kind":
                 this.score = 7000;
-                this.score += handArray[0].getNumber() + handArray[1].getNumber()
-                        + handArray[2].getNumber() + handArray[3].getNumber()
-                        + handArray[4].getNumber();
+                for(int i = 0; i < 4; i++){
+                    this.score += this.hand.get(i).getNumber();
+                }
                 break;
             case "Full house":
                 this.score = 6000;
-                this.score += handArray[0].getNumber() + handArray[1].getNumber()
-                        + handArray[2].getNumber() + handArray[3].getNumber()
-                        + handArray[4].getNumber();
+                for(int i = 0; i < this.hand.size(); i++){
+                    this.score += this.hand.get(i).getNumber();
+                }
                 break;
             case "Three of a kind":
                 this.score = 3000;
-                this.score += handArray[0].getNumber() + handArray[1].getNumber()
-                        + handArray[2].getNumber();
+                for(int i = 0; i < 3; i++){
+                    this.score += this.hand.get(i).getNumber();
+                }
                 break;
             case "Two pairs":
                 this.score = 2000;
-                this.score += handArray[0].getNumber() + handArray[1].getNumber()
-                        + handArray[2].getNumber() + handArray[3].getNumber()
-                        + handArray[4].getNumber();
+                for(int i = 0; i < 4; i++){
+                    this.score += this.hand.get(i).getNumber();
+                }
                 break;
             case "One pair":
                 this.score = 1000;
-                this.score += handArray[0].getNumber() + handArray[1].getNumber();
+                for(int i = 0; i < 2; i++){
+                    this.score += this.hand.get(i).getNumber();
+                }
                 break;
             case "High card":
-                this.score = handArray[0].getNumber();
+                this.score = this.hand.get(0).getNumber();
                 break;
         }
     }
@@ -189,8 +180,9 @@ public class Hand {
     @Override
     public String toString() {
         String str = "Score:" + this.score + " ";
-        for (int i = 0; i < this.hand.size(); i++) {
-            str += this.hand.get(i).toString() + " ";
+        //This is java's foreach.
+        for (Card c : this.hand) {
+            str += c.toString() + " ";
         }
         return str + this.handValue;
     }

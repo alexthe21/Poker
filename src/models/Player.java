@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package poker;
+package models;
 
 /**
  *
@@ -11,11 +11,13 @@ package poker;
 public class Player {
 
     int id;
+    String name;
     Hand hand;
     int victories;
 
-    public Player(int id) {
+    public Player(int id, String name) {
         this.id = id;
+        this.name = name;
         this.hand = new Hand();
         this.victories = 0;
     }
@@ -57,7 +59,7 @@ public class Player {
 
     @Override
     public String toString() {
-        return "Player: " + this.id + " Wins: " + this.victories + " Hand: " + 
+        return "Player(" + this.id + ", " + this.name + "): Wins: " + this.victories + " Hand: " + 
                 this.hand.toString();
     }
 }

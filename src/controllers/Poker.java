@@ -2,8 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package poker;
+package controllers;
 
+import models.Deck;
+import models.Player;
+import views.MainView;
 import java.util.Random;
 
 /**
@@ -16,18 +19,22 @@ public class Poker {
     Player[] players = new Player[4];
     Player turn;
     int stage;
+    int howManyHands;
+    MainView mv;
 
-    public Poker() {
+    public Poker(String[] names, int hands) {
         for (int i = 0; i < 4; i++) {
-            this.players[i] = new Player(i);
+            this.players[i] = new Player(i, names[i]);
         }
         Random ran = new Random();
         int rnd = ran.nextInt(4);
         this.turn = this.players[rnd];
+        this.howManyHands = hands;
+        this.mv = new MainView();
     }
 
     public void play() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < this.howManyHands; i++) {
             //Instance a new deck.
             this.deck = new Deck();
             this.resetScores();
@@ -42,7 +49,7 @@ public class Poker {
             for (int j = 0; j < this.players.length; j++) {
                 this.deal(5);
             }
-            System.out.println(this.toString());
+            this.mv.println(this.toString());
 
             //Next game stage.
             this.stage++;
@@ -55,7 +62,7 @@ public class Poker {
             //Check the winner.
             this.setScores();
             this.getWinner().win();
-            System.out.println(this.toString());
+            this.mv.println(this.toString());
 
             //Discard all cards.
             this.discardAll();
